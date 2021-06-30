@@ -1,8 +1,23 @@
 package com.google;
 
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.Collections;
+
 public class VideoPlayer {
 
   private final VideoLibrary videoLibrary;
+  private Video videoPlaying;
+  private Boolean videoPaused = false;
+
+  private void setVideoPlaying(Video v) {
+    this.videoPlaying = v;
+    setVideoPaused(false);
+  }
+
+  private void setVideoPaused(Boolean p) {
+    this.videoPaused = p;
+  }
 
   public VideoPlayer() {
     this.videoLibrary = new VideoLibrary();
@@ -13,31 +28,107 @@ public class VideoPlayer {
   }
 
   public void showAllVideos() {
-    System.out.println("showAllVideos needs implementation");
+    System.out.println("Here's a list of all available videos:");
+    //videoLibrary.printVideoDetails();
+
+    ArrayList<String> videoDetails = new ArrayList<String>();
+    for (Video key : videoLibrary.getVideos()) {
+      videoDetails.add(videoLibrary.getVideoDetails(key));
+    }
+
+    //SOURCE: https://www.w3schools.com/java/java_arraylist.asp
+    Collections.sort(videoDetails);
+    for (String v : videoDetails) {
+      System.out.println(v);
+    }
+
+  }
+
+  private void stopPlayingVideo() {
+    if (videoPlaying != null) {
+      System.out.println("Stopping video: " + videoPlaying.getTitle());
+      setVideoPlaying(null);
+    }
   }
 
   public void playVideo(String videoId) {
-    System.out.println("playVideo needs implementation");
+    Video videoToPlay = videoLibrary.getVideo(videoId);
+
+    if (videoToPlay == null) {
+      System.out.println("Cannot play video: Video does not exist");
+    }
+    else {
+      stopPlayingVideo();
+      setVideoPlaying(videoToPlay);
+      System.out.println("Playing video: " + videoPlaying.getTitle());
+    }
+    
+
   }
 
   public void stopVideo() {
-    System.out.println("stopVideo needs implementation");
+    if (videoPlaying == null) {
+      System.out.println("Cannot stop video: No video is currently playing");
+    }
+    else stopPlayingVideo();
   }
 
   public void playRandomVideo() {
-    System.out.println("playRandomVideo needs implementation");
+    ArrayList<String> videoIDs = videoLibrary.getVideoIDs();
+    
+    if (videoIDs.size() == 0) {
+      System.out.print("No videos available");
+    }
+    else {
+      Random rnd = new Random();
+      playVideo(videoIDs.get(rnd.nextInt(videoIDs.size())));
+    }
+
   }
 
   public void pauseVideo() {
-    System.out.println("pauseVideo needs implementation");
+    if (videoPlaying == null) {
+      System.out.println("Cannot pause video: No video is currently playing");
+    }
+    else {
+      if (videoPaused) {
+        System.out.println("Video already paused: " + videoPlaying.getTitle());
+      }
+      else {
+        setVideoPaused(true);
+        System.out.println("Pausing video: " + videoPlaying.getTitle());
+      }
+    }
   }
 
   public void continueVideo() {
-    System.out.println("continueVideo needs implementation");
+    //System.out.println("continueVideo needs implementation");
+    if (videoPlaying == null) {
+      System.out.println("Cannot continue video: No video is currently playing");
+    }
+    else {
+      if (videoPaused) {
+        setVideoPaused(false);
+        System.out.println("Continuing video: " + videoPlaying.getTitle());
+      }
+      else {
+        System.out.println("Cannot continue video: Video is not paused");
+      }
+    }
   }
 
   public void showPlaying() {
-    System.out.println("showPlaying needs implementation");
+    String outputMsg;
+    if (videoPlaying == null) {
+      outputMsg = "No video is currently playing";
+    }
+    else {
+      outputMsg = "Currently playing: " + videoLibrary.getVideoDetails(videoPlaying);
+      if (videoPaused) {
+        outputMsg += " - PAUSED";
+      }
+    }
+    System.out.print(outputMsg);
   }
 
   public void createPlaylist(String playlistName) {

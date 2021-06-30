@@ -4,10 +4,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
+
+import org.sonatype.aether.collection.CollectResult;
 
 /**
  * A class used to represent a Video Library.
@@ -46,10 +50,31 @@ class VideoLibrary {
     return new ArrayList<>(this.videos.values());
   }
 
+  ArrayList<String> getVideoIDs() {
+    ArrayList<String> IDs = new ArrayList<String>();
+    for (Video v : getVideos()) {
+      IDs.add(v.getVideoId());
+    }
+    return IDs;
+  }
+
   /**
    * Get a video by id. Returns null if the video is not found.
    */
   Video getVideo(String videoId) {
     return this.videos.get(videoId);
   }
+
+  /**
+   * returns the video's details in the format “title (video_id) [tags]"
+   */
+  String getVideoDetails(Video v) {
+    StringBuilder details = new StringBuilder();
+    details.append(v.getTitle());
+    details.append(" (" + v.getVideoId() + ") ");
+    details.append(v.getTags().toString().replaceAll("[,]", ""));
+
+    return details.toString();
+  }
+
 }
