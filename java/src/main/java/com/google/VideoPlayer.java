@@ -1,6 +1,8 @@
 package com.google;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.Collections;
 
@@ -9,6 +11,7 @@ public class VideoPlayer {
   private final VideoLibrary videoLibrary;
   private Video videoPlaying;
   private Boolean videoPaused = false;
+  private HashMap<String, VideoPlaylist> playlists;
 
   private void setVideoPlaying(Video v) {
     this.videoPlaying = v;
@@ -19,8 +22,13 @@ public class VideoPlayer {
     this.videoPaused = p;
   }
 
+  private VideoPlaylist getPlaylist(String playlistName) {
+    return this.playlists.get(playlistName.toLowerCase());
+  }
+
   public VideoPlayer() {
     this.videoLibrary = new VideoLibrary();
+    this.playlists = new HashMap<>();
   }
 
   public void numberOfVideos() {
@@ -132,15 +140,43 @@ public class VideoPlayer {
   }
 
   public void createPlaylist(String playlistName) {
-    System.out.println("createPlaylist needs implementation");
+    if (playlists.containsKey(playlistName.toLowerCase())) {
+      System.out.println("Cannot create playlist: A playlist with the same name already exists");
+    }
+    else {
+      playlists.put(playlistName.toLowerCase(), new VideoPlaylist(playlistName));
+      System.out.println("Successfully created new playlist: " + playlistName);
+    }
   }
 
   public void addVideoToPlaylist(String playlistName, String videoId) {
-    System.out.println("addVideoToPlaylist needs implementation");
+    //check if both playlist and video exist
+    if (getPlaylist(playlistName) == null) {
+      System.out.println("Cannot add video to " + playlistName + ": Playlist does not exist");
+    }
+    else if (videoLibrary.getVideo(videoId) == null) {
+      System.out.println("Cannot add video to " + playlistName + ": Video does not exist");
+    }
+
+    //try to add video to playlist
+    else if (getPlaylist(playlistName).addToPlaylist(videoLibrary.getVideo(videoId))) {
+      System.out.println("Added video to " + playlistName + ": " + videoLibrary.getVideo(videoId).getTitle());
+    }
+    else {
+      System.out.println("Cannot add video to " + playlistName + ": Video already added");
+    }
   }
 
   public void showAllPlaylists() {
-    System.out.println("showAllPlaylists needs implementation");
+    if (playlists.size() == 0) {
+      System.out.println("No playlists exist yet");
+    }
+    else {
+      System.out.println("Showing all playlists:");
+      for (String p : playlists.keySet()) {
+        System.out.println(getPlaylist(p).getName());
+      }
+    }
   }
 
   public void showPlaylist(String playlistName) {
