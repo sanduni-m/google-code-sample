@@ -50,6 +50,9 @@ class VideoLibrary {
     return new ArrayList<>(this.videos.values());
   }
 
+  /**
+   * @return all the IDs of the videos as strings in an ArrayList
+   */
   ArrayList<String> getVideoIDs() {
     ArrayList<String> IDs = new ArrayList<String>();
     for (Video v : getVideos()) {

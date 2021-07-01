@@ -52,6 +52,10 @@ public class VideoPlayer {
 
   }
 
+  /**
+   * stops any video that is currently playing
+   * resets the boolean videoPaused to false
+   */
   private void stopPlayingVideo() {
     if (videoPlaying != null) {
       System.out.println("Stopping video: " + videoPlaying.getTitle());

@@ -7,24 +7,28 @@ class VideoPlaylist {
 
     private final String name;
     private final String playlistID;
-    private ArrayList<Video> videoIDs;
+    private ArrayList<Video> videos;
 
     VideoPlaylist(String name) {
         this.name = name;
         this.playlistID = name.toLowerCase();
-        this.videoIDs = new ArrayList<>();
+        this.videos = new ArrayList<>();
     }
 
     String getName() {
         return this.name;
     }
 
+    /**
+     * @param video added to ArrayList videos if it isn't already present
+     * @return whether the video was added or not
+     */ 
     Boolean addToPlaylist(Video video) {
-        if (videoIDs.contains(video)) {
+        if (videos.contains(video)) {
             return false;
         }
         else {
-            videoIDs.add(video);
+            videos.add(video);
             return true;
         }
     }
