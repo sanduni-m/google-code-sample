@@ -19,6 +19,10 @@ class VideoPlaylist {
         return this.name;
     }
 
+    ArrayList<Video> getVideos() {
+        return videos;
+    }
+
     /**
      * @param video added to ArrayList videos if it isn't already present
      * @return whether the video was added or not
