@@ -35,6 +35,20 @@ class VideoPlaylist {
             videos.add(video);
             return true;
         }
-    }
+    }    
+    
+    /**
+    * @param video removed from ArrayList videos if present
+    * @return whether the video was removed or not
+    */ 
+   Boolean removeFromPlaylist(Video video) {
+       if (videos.contains(video)) {
+           videos.remove(video);
+           return true;
+       }
+       else {
+           return false;
+       }
+   }
 
 }

@@ -168,7 +168,8 @@ mvn exec:java
     }
 
     //try to add video to playlist
-    else if (playlistLibrary.getPlaylist(playlistName).addToPlaylist(videoLibrary.getVideo(videoId))) {
+    else if (playlistLibrary.getPlaylist(playlistName)
+        .addToPlaylist(videoLibrary.getVideo(videoId))) {
       System.out.println("Added video to " + playlistName + ": " + videoLibrary.getVideo(videoId).getTitle());
     }
     else {
@@ -194,7 +195,7 @@ mvn exec:java
     } 
     else {
       System.out.println("Showing playlist: " + playlistName);
-      if (playlistLibrary.getPlaylist(playlistName).getVideos() == null) {
+      if (playlistLibrary.getPlaylist(playlistName).getVideos().size() == 0) {
         System.out.println("No videos here yet");
       }
       else {
@@ -206,7 +207,26 @@ mvn exec:java
   }
 
   public void removeFromPlaylist(String playlistName, String videoId) {
-    System.out.println("removeFromPlaylist needs implementation");
+    if (playlistLibrary.getPlaylist(playlistName) == null) {
+      System.out.println("Cannot remove video from " + playlistName + ": Playlist does not exist");
+    }
+    else if (videoLibrary.getVideo(videoId) == null) {
+      System.out.println("Cannot remove video from " + playlistName + ": Video does not exist");
+    }
+    else if (!playlistLibrary.getPlaylist(playlistName).getVideos()
+        .contains(videoLibrary.getVideo(videoId))) {
+      System.out.println("Cannot remove video from " + playlistName + ": Video is not in playlist");
+    }
+    else {
+      //try to remove video from playlist
+      if (playlistLibrary.getPlaylist(playlistName)
+          .removeFromPlaylist(videoLibrary.getVideo(videoId))) {
+        System.out.println("Removed video from " + playlistName + ": " + videoLibrary.getVideo(videoId).getTitle());
+      }
+      else {
+        System.out.println("Cannot remove video from " + playlistName + ": Video is not in playlist");
+      }
+    }
   }
 
   public void clearPlaylist(String playlistName) {
