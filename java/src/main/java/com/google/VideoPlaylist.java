@@ -19,6 +19,10 @@ class VideoPlaylist {
         return this.name;
     }
 
+    String getPlaylistID() {
+        return this.playlistID;
+    }
+
     ArrayList<Video> getVideos() {
         return videos;
     }
@@ -49,6 +53,10 @@ class VideoPlaylist {
        else {
            return false;
        }
+   }
+
+   void clearPlaylist() {
+       videos.clear();
    }
 
 }

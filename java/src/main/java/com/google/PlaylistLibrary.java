@@ -36,11 +36,12 @@ public class PlaylistLibrary {
     playlists.put(playlistName.toLowerCase(), new VideoPlaylist(playlistName));
   }
 
-  void addVideo(String playlistName) {
+  void removePlaylist(VideoPlaylist p) {
+    playlists.remove(p.getPlaylistID(), p);
   }
-/*
-  Boolean playlistExists(String playlistName) {
-    return playlists.containsKey(playlistName.toLowerCase());
-  }*/
+
+  public void printPlaylistDoesNotExist(String action, String playlistName) {
+      System.out.println("Cannot " + action + " " + playlistName + ": Playlist does not exist");
+  }
 
 }
