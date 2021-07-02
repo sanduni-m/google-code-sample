@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.Scanner;
 import java.util.Collections;
 
 public class VideoPlayer {
@@ -39,14 +40,13 @@ public class VideoPlayer {
 
   public void showAllVideos() {
     System.out.println("Here's a list of all available videos:");
-    //videoLibrary.printVideoDetails();
 
     ArrayList<String> videoDetails = new ArrayList<String>();
     for (Video key : videoLibrary.getVideos()) {
       videoDetails.add(videoLibrary.getVideoDetails(key));
     }
 
-    //SOURCE: https://www.w3schools.com/java/java_arraylist.asp
+    //SOURCE (accessed 30/06/2021): https://www.w3schools.com/java/java_arraylist.asp
     Collections.sort(videoDetails);
     for (String v : videoDetails) {
       System.out.println(v);
@@ -144,10 +144,7 @@ public class VideoPlayer {
     }
     System.out.print(outputMsg);
   }
-/*
-mvn exec:java
 
-*/
   public void createPlaylist(String playlistName) {
     if (playlistLibrary.getPlaylist(playlistName) != null) {
       System.out.println("Cannot create playlist: A playlist with the same name already exists");
@@ -253,7 +250,52 @@ mvn exec:java
   }
 
   public void searchVideos(String searchTerm) {
-    System.out.println("searchVideos needs implementation");
+    ArrayList<Video> results = new ArrayList<Video>();
+    //add vidoes which titles contain the seatchTerm to arraylist results
+    for (Video key : videoLibrary.getVideos()) {
+      for (String word : key.getTitle().split(" ")) {
+        if ((word.toLowerCase()).contains(searchTerm.toLowerCase())) {
+          results.add(key);
+          break;
+        }
+      }
+    }
+
+    //instersion sort by the video's titles alphabetically
+    for (int i = 1; i < results.size(); i++) {
+      Video tempVideo = results.get(i);
+      int position = i;
+      //position > 0 and tempV's title comes before results.get(position-1)'s title
+      //SOURCE (accessed 02/07/2021): https://beginnersbook.com/2013/12/java-string-compareto-method-example/
+      while (position > 0 && tempVideo.getTitle().compareTo(results.get(position-1).getTitle()) < 0) {
+        results.set(position, results.get(position-1));
+        position--;
+      }
+      results.set(position, tempVideo);
+    }
+
+    //if no results were found
+    if (results.size() == 0) {
+      System.out.println("No search results for " + searchTerm);
+    }
+
+    else {
+      //print out results
+      System.out.println("Here are the results for " + searchTerm + ":");
+      for (int i = 0; i < results.size(); i++) {
+        System.out.println((i+1) + ") " + videoLibrary.getVideoDetails(results.get(i)));
+      }
+      System.out.println("Would you like to play any of the above? If yes, specify the number of the video. \nIf your answer is not a valid number, we will assume it's a no.");
+    
+      //get integer input for the video number to be played and play it
+      Scanner r = new Scanner(System.in);
+      if (r.hasNextInt()) {
+        int i = r.nextInt();
+        if (i <= results.size() && i > 0) {
+          playVideo(results.get(i-1).getVideoId());
+        }
+      }
+    }
   }
 
   public void searchVideosWithTag(String videoTag) {
